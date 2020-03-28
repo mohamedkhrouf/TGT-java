@@ -18,14 +18,15 @@ public class TGT {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws SQLException {
-        Personne p = new Personne("Test", "test@gmail.com","test");
+        Personne p = new Personne("medk", "medk@gmail.com","test");
         PersonneService ps = new PersonneService();
        
         System.out.println(ps.getAllPersonnes());
         
         ps.ajouterPersonne(p);
-
-       
+       // ps.supprimerPersonne(p.getId());
+       ps.modifierPersonne(p);
+        
         
     }
 
