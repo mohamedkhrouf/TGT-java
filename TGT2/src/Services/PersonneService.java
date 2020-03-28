@@ -17,7 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import java.math.BigInteger; 
+import java.security.MessageDigest; 
+import java.security.NoSuchAlgorithmException; 
 
 public class PersonneService {
 
@@ -66,14 +68,30 @@ public void supprimerPersonne(int id) {
             System.out.println("erreur");   
         }
     }
- public void modifierPersonne(Personne utilisateur) {
-          String requette2="update fos_user set username=?,password=? where id=?";
+ public void modifierPersonne(int id,String username,String password) {
+          String requette2="update fos_user set username=?,password=? where id="+id;
      
          
               try {  PreparedStatement pst2 = connexion.prepareStatement(requette2);
                
-      pst2.setString(1,utilisateur.getUsername());
-      pst2.setString(2,utilisateur.getPassword());
+      pst2.setString(1,username);
+      pst2.setString(2,password);
+
+        
+      pst2.executeUpdate();
+      System.out.println("modification reussie");
+          } catch (SQLException ex) {
+                  System.out.println("erreur");
+          } 
+    }
+ public void modifierMdpPersonne(Personne p,String password) {
+          String requette2="update fos_user set password=? where id="+p.getId();
+     
+         
+              try {  PreparedStatement pst2 = connexion.prepareStatement(requette2);
+               
+      
+      pst2.setString(1,password);
 
         
       pst2.executeUpdate();
@@ -98,5 +116,6 @@ public void supprimerPersonne(int id) {
         System.out.println("Afficher Personnes :");
         return personnes;
     }
+  
 
 }

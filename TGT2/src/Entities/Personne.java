@@ -7,7 +7,9 @@ package Entities;
 
 import java.util.Date;
 import java.sql.Timestamp;
-
+import java.math.BigInteger; 
+import java.security.MessageDigest; 
+import java.security.NoSuchAlgorithmException; 
 
 
  
@@ -24,6 +26,7 @@ public class Personne {
      private String confirmation_token;
      private Timestamp password_requested_at;
      private String roles;
+     
 
     public Personne(String username, String email, String password) {
        this.id=this.id +1;
@@ -151,7 +154,7 @@ public class Personne {
        return "Personne : {" + "identifiant=" + this.id + ", nom=" + this.username + ", prenom=" + this.email+ '}'+ "\n"; 
     }
 
-  
+ 
 
     
 

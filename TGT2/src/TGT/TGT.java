@@ -23,10 +23,10 @@ public class TGT {
        
         System.out.println(ps.getAllPersonnes());
         
-        ps.ajouterPersonne(p);
+        //ps.ajouterPersonne(p);
        // ps.supprimerPersonne(p.getId());
-       ps.modifierPersonne(p);
-        
+      // ps.modifierPersonne(p.getId(),"medk","test");
+       ps.modifierMdpPersonne(p,"test");
         
     }
 
