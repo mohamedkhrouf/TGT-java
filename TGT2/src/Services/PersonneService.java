@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package Services;
-
+import Entities.BCrypt;
 import Entities.Personne;
 import TGT.MyDbConnection;
 import java.sql.Connection;
@@ -29,6 +29,13 @@ public class PersonneService {
     public PersonneService() {
        connexion=MyDbConnection.getInstance().getConnexion();
     }
+     public static String hashPassword(String password_plaintext) {
+        String salt = BCrypt.gensalt(13);
+        System.out.println(salt);
+        String hashed_password = BCrypt.hashpw(password_plaintext, salt);
+
+        return (hashed_password);
+    }
 
    public void ajouterPersonne(Personne p) throws SQLException {
         String requete="insert INTO fos_user(id,username,username_canonical,email,email_canonical,enabled,salt,password,last_login,confirmation_token,password_requested_at,roles) values (?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -42,7 +49,7 @@ public class PersonneService {
              pst.setString(5, p.getEmail_canonical());
              pst.setInt(6, p.getEnabled());
              pst.setString(7, p.getSalt());
-             pst.setString(8, p.getPassword());
+             pst.setString(8, hashPassword(p.getPassword()));
              pst.setTimestamp(9, p.getLast_login());
              pst.setString(10, p.getConfirmation_token());
              pst.setTimestamp(11, p.getPassword_requested_at());
@@ -75,7 +82,7 @@ public void supprimerPersonne(int id) {
               try {  PreparedStatement pst2 = connexion.prepareStatement(requette2);
                
       pst2.setString(1,username);
-      pst2.setString(2,password);
+      pst2.setString(2,hashPassword(password));
 
         
       pst2.executeUpdate();
@@ -91,7 +98,7 @@ public void supprimerPersonne(int id) {
               try {  PreparedStatement pst2 = connexion.prepareStatement(requette2);
                
       
-      pst2.setString(1,password);
+      pst2.setString(1,hashPassword(password));
 
         
       pst2.executeUpdate();
@@ -100,8 +107,74 @@ public void supprimerPersonne(int id) {
                   System.out.println("erreur");
           } 
     }
+public void loginPersonne(String username, String password){
 
+     String requette2="SELECT username,password FROM fos_user WHERE username=? AND password=?";
+       PreparedStatement pst2;
+       try {
+           pst2 = connexion.prepareStatement(requette2);
+      pst2.setString(1,username);
+      pst2.setString(2,hashPassword(password));
+      ResultSet result = pst2.executeQuery();
+            boolean loginOk = result.next();
+            if(loginOk){
+                String mdp = result.getString("password");
+                if(mdp.equals(password)){
+                    System.out.println("connexion réussie");
+                }else{
+                    System.out.println("mot de passe incorrect");
+                }
+            }else{
+                System.out.println("login incorrect");
+            }
+       
+         
+ } catch (SQLException ex) {
+           System.out.println(ex);
+       }
+        
+}
+     public Personne checkLog(String username, String password) {
+        java.sql.Statement query;
+		Personne user = null;
+		try {
+			connexion = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/tgtof","root","");
+			String sql = "Select * from fos_user u where u.username = '" +username+"'";
+			query = connexion.prepareStatement(sql);
+			java.sql.ResultSet result = query.executeQuery(sql);
+			if(result.next() != false) {
+				user = new Personne(result.getString("username"), result.getString("email"), result.getString("password"));
+                            System.out.println("mdp    "+result.getString("password"));
+                         
+                                String mdp = result.getString("password");
+                                if(checkPassword(password, mdp)){
+                                System.out.println("connexion réussie");
+                                }else{
+                                System.out.println("mot de passe incorrect");
+                                } 
+                                
+                                
+			}else {
+				user = null;
+			}
+		} catch (SQLException e) {
+                    
+                e.printStackTrace();
+		}
+		       System.out.println(user);
+		return user;
+	}
+    public static boolean checkPassword(String password_plaintext, String stored_hash) {
+        boolean password_verified = false;
 
+        if (null == stored_hash || !stored_hash.startsWith("$2y$")) {
+            throw new java.lang.IllegalArgumentException("Invalid hash provided for comparison");
+        }
+
+        password_verified = BCrypt.checkpw(password_plaintext, stored_hash);
+
+        return (password_verified);
+    }
     public List<Personne> getAllPersonnes() throws SQLException {
        List<Personne> personnes = new ArrayList<>();
         

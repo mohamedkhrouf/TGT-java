@@ -47,6 +47,25 @@ public class Personne {
         this.password_requested_at = requested;
         this.roles = "a:1:{i:0;s:9:\"ROLE_USER\";}";
     }
+    public Personne() {
+       this.id=this.id +1;
+     
+        this.username_canonical = username;
+     
+        this.email_canonical = email;
+        this.enabled = 1;
+        this.Salt = "";
+        
+      
+       java.util.Date date = new Date();
+        Timestamp last = new java.sql.Timestamp(date.getTime());
+	 
+        this.last_login = last;
+        this.confirmation_token = username;
+         Timestamp requested = new java.sql.Timestamp(date.getTime());
+        this.password_requested_at = requested;
+        this.roles = "a:1:{i:0;s:9:\"ROLE_USER\";}";
+    }
   
     public String getEmail_canonical() {
         return email_canonical;
