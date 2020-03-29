@@ -107,33 +107,7 @@ public void supprimerPersonne(int id) {
                   System.out.println("erreur");
           } 
     }
-public void loginPersonne(String username, String password){
 
-     String requette2="SELECT username,password FROM fos_user WHERE username=? AND password=?";
-       PreparedStatement pst2;
-       try {
-           pst2 = connexion.prepareStatement(requette2);
-      pst2.setString(1,username);
-      pst2.setString(2,hashPassword(password));
-      ResultSet result = pst2.executeQuery();
-            boolean loginOk = result.next();
-            if(loginOk){
-                String mdp = result.getString("password");
-                if(mdp.equals(password)){
-                    System.out.println("connexion réussie");
-                }else{
-                    System.out.println("mot de passe incorrect");
-                }
-            }else{
-                System.out.println("login incorrect");
-            }
-       
-         
- } catch (SQLException ex) {
-           System.out.println(ex);
-       }
-        
-}
      public Personne checkLog(String username, String password) {
         java.sql.Statement query;
 		Personne user = null;
