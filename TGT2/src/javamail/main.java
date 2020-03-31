@@ -11,6 +11,6 @@ package javamail;
  */
 public class main {
     public static void main(String[] args)throws Exception{
-        JavaMailUtil.sendMail("mohamed.khrouf21@gmail.com");
+    
     }
 }

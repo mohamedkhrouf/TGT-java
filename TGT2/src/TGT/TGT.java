@@ -10,6 +10,8 @@ import Services.PersonneService;
 import Entities.Personne;
 
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class TGT {
@@ -19,15 +21,20 @@ public class TGT {
      */
     public static void main(String[] args) throws SQLException {
         PersonneService ps = new PersonneService();
-        Personne p = new Personne("med", "medk@gmail.com","test");
+        Personne p = new Personne("medg", "mohamed.khrouf4@gmail.com","test");
         
         System.out.println(ps.getAllPersonnes());
         
-        //ps.ajouterPersonne(p);
-       // ps.supprimerPersonne(p.getId());
-      // ps.modifierPersonne(p.getId(),"medk","test");
-       ps.modifierMdpPersonne(p,"lol");
-        ps.checkLog("medk","lol" );
+  
+        try {
+            ps.ajouterPersonne(p);
+            // ps.supprimerPersonne(p.getId());
+            // ps.modifierPersonne(p.getId(),"medk","test");
+        } catch (Exception ex) {
+            Logger.getLogger(TGT.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      
+      
     }
 
 }

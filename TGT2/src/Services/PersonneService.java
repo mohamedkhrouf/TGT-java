@@ -20,6 +20,8 @@ import java.util.logging.Logger;
 import java.math.BigInteger; 
 import java.security.MessageDigest; 
 import java.security.NoSuchAlgorithmException; 
+import java.util.Scanner;
+import javamail.JavaMailUtil;
 
 public class PersonneService {
 
@@ -37,8 +39,8 @@ public class PersonneService {
         return (hashed_password);
     }
 
-   public void ajouterPersonne(Personne p) throws SQLException {
-        String requete="insert INTO fos_user(id,username,username_canonical,email,email_canonical,enabled,salt,password,last_login,confirmation_token,password_requested_at,roles) values (?,?,?,?,?,?,?,?,?,?,?,?)";
+   public void ajouterPersonne(Personne p) throws Exception {
+  try{      String requete="insert INTO fos_user(id,username,username_canonical,email,email_canonical,enabled,salt,password,last_login,confirmation_token,password_requested_at,roles) values (?,?,?,?,?,?,?,?,?,?,?,?)";
         
            
             PreparedStatement pst= connexion.prepareStatement(requete);
@@ -54,13 +56,23 @@ public class PersonneService {
              pst.setString(10, p.getConfirmation_token());
              pst.setTimestamp(11, p.getPassword_requested_at());
              pst.setString(12, p.getRoles());
-  
-            
-          
+  JavaMailUtil.sendMail(p.getEmail(),p.getConfirmation_token());
+Scanner sc = new Scanner(System.in);
+
+     String str = sc.nextLine();
+           
+           
+   
+     
+          if(str.equals(p.getConfirmation_token())){
              pst.executeUpdate();
             System.out.println("Insertion réussie");
-                  System.out.println("Insertion réussie");
-       
+                  
+          }else{
+              System.out.println("Insertion echoué");
+          }}catch(Exception ex){
+              System.out.println(ex);
+          }
      
     }
 

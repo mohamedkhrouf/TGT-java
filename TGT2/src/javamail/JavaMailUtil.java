@@ -23,7 +23,7 @@ import javax.mail.internet.MimeMessage;
  * @author mohamed khrouf
  */
 public class JavaMailUtil {
-    public static void sendMail(String recepient)throws Exception{
+    public static void sendMail(String recepient,String code)throws Exception{
         System.out.println("preparing to send email");
         Properties properties= new Properties() ;
         properties.put("mail.smtp.auth", "true");
@@ -40,18 +40,18 @@ public class JavaMailUtil {
             }
          
      });
-     Message message = prepareMessage(session, myAccountEmail, recepient);
+     Message message = prepareMessage(session, myAccountEmail, recepient, code);
         Transport.send(message);
         System.out.println("message sent successfully");
     }
 
-    private static Message prepareMessage(Session session,String myAccountEmail,String recepient) {
+    private static Message prepareMessage(Session session,String myAccountEmail,String recepient,String code) {
         Message message= new MimeMessage(session);
         try {
             message.setFrom(new InternetAddress(myAccountEmail));
             message.setRecipient(Message.RecipientType.TO,new InternetAddress(recepient));
-            message.setSubject("my first email");
-            message.setText("hey there!");
+            message.setSubject("your account confirmation code");
+            message.setText(code);
             return message;
         } catch (Exception ex) {
             Logger.getLogger(JavaMailUtil.class.getName()).log(Level.SEVERE, null, ex);

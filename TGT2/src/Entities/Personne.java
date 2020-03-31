@@ -5,16 +5,21 @@
  */
 package Entities;
 
+import TGT.MyDbConnection;
 import java.util.Date;
 import java.sql.Timestamp;
 import java.math.BigInteger; 
 import java.security.MessageDigest; 
 import java.security.NoSuchAlgorithmException; 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 
  
 public class Personne {
-     private int id=0;
+     private int id;
      private String username;
      private String username_canonical;
      private String email;
@@ -28,7 +33,17 @@ public class Personne {
      private String roles;
      
 
-    public Personne(String username, String email, String password) {
+    public Personne(String username, String email, String password) throws SQLException {
+           Connection connexion;
+         connexion=MyDbConnection.getInstance().getConnexion();
+        connexion = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/tgtof","root","");
+         String req = "select * from fos_user";
+        Statement stm = connexion.createStatement();
+        ResultSet result =  stm.executeQuery(req);
+         while(result.next()){
+           this.id = result.getInt("id");
+   }
+         
        this.id=this.id +1;
         this.username = username;
         this.username_canonical = username;
@@ -37,12 +52,12 @@ public class Personne {
         this.enabled = 1;
         this.Salt = "";
         this.password = password ;
-      
+       int randomPIN = (int)(Math.random()*9000)+1000;
        java.util.Date date = new Date();
         Timestamp last = new java.sql.Timestamp(date.getTime());
 	 
         this.last_login = last;
-        this.confirmation_token = username;
+        this.confirmation_token = String.valueOf(randomPIN);
          Timestamp requested = new java.sql.Timestamp(date.getTime());
         this.password_requested_at = requested;
         this.roles = "a:1:{i:0;s:9:\"ROLE_USER\";}";
@@ -59,9 +74,9 @@ public class Personne {
       
        java.util.Date date = new Date();
         Timestamp last = new java.sql.Timestamp(date.getTime());
-	 
+	  int randomPIN = (int)(Math.random()*9000)+1000;
         this.last_login = last;
-        this.confirmation_token = username;
+        this.confirmation_token = String.valueOf(randomPIN);
          Timestamp requested = new java.sql.Timestamp(date.getTime());
         this.password_requested_at = requested;
         this.roles = "a:1:{i:0;s:9:\"ROLE_USER\";}";
